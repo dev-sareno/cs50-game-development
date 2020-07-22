@@ -125,3 +125,7 @@ function GenerateQuadsBalls(atlas)
 
     return quads
 end
+
+function GeneratePowerExtraBallQuads(atlas)
+    return love.graphics.newQuad(32, 192, 16, 16, atlas:getDimensions())
+end
