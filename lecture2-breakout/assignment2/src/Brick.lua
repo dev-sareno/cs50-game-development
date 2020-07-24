@@ -106,26 +106,31 @@ function Brick:hit()
     gSounds['brick-hit-2']:stop()
     gSounds['brick-hit-2']:play()
 
-    -- if we're at a higher tier than the base, we need to go down a tier
-    -- if we're already at the lowest color, else just go down a color
-    if self.tier > 0 then
-        if self.color == 1 then
-            self.tier = self.tier - 1
-            self.color = 5
-        else
-            self.color = self.color - 1
-        end
+    -- key bricks should only be hitted once
+    if self:isPowerUpKey() then
+        self.inPlay = false
     else
-        -- if we're in the first tier and the base color, remove brick from play
-        if self.color == 1 then
-            self.inPlay = false
+        -- if we're at a higher tier than the base, we need to go down a tier
+        -- if we're already at the lowest color, else just go down a color
+        if self.tier > 0 then
+            if self.color == 1 then
+                self.tier = self.tier - 1
+                self.color = 5
+            else
+                self.color = self.color - 1
+            end
         else
-            self.color = self.color - 1
+            -- if we're in the first tier and the base color, remove brick from play
+            if self.color == 1 then
+                self.inPlay = false
+            else
+                self.color = self.color - 1
+            end
         end
     end
 
-    -- play a second layer sound if the brick is destroyed
-    if not self.inPlay then
+    -- play a second layer sound if the brick is destroyed or it's a type of key
+    if not self.inPlay or self:isPowerUpKey() then
         gSounds['brick-hit-1']:stop()
         gSounds['brick-hit-1']:play()
     end
@@ -137,11 +142,15 @@ end
 
 function Brick:render()
     if self.inPlay then
-        love.graphics.draw(gTextures['main'], 
-            -- multiply color by 4 (-1) to get our color offset, then add tier to that
-            -- to draw the correct tier and color brick onto the screen
-            gFrames['bricks'][1 + ((self.color - 1) * 4) + self.tier],
-            self.x, self.y)
+        if self:isPowerUpKey() then
+            love.graphics.draw(gTextures['main'],  gFrames['brick-key'], self.x, self.y)
+        else
+            love.graphics.draw(gTextures['main'], 
+                -- multiply color by 4 (-1) to get our color offset, then add tier to that
+                -- to draw the correct tier and color brick onto the screen
+                gFrames['bricks'][1 + ((self.color - 1) * 4) + self.tier],
+                self.x, self.y)
+        end
     end
 end
 
@@ -151,4 +160,10 @@ end
 ]]
 function Brick:renderParticles()
     love.graphics.draw(self.psystem, self.x + 16, self.y + 8)
+end
+
+function Brick:isPowerUpKey()
+    return not (self.powerUps == nil) 
+        and not (self.powerUps[0] == nil)
+        and self.powerUps[0].type == 'key'
 end

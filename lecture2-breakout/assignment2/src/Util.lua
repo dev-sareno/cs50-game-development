@@ -136,3 +136,9 @@ function GeneratePowerUpsQuads(atlas)
     end
     return quads
 end
+
+function GenerateBrickKeyQuad(atlas)
+    local x = 160
+    local y = 48
+    return love.graphics.newQuad(x, y, 32, 16, atlas:getDimensions())
+end

@@ -37,6 +37,8 @@ function PlayState:enter(params)
         ball.dx = math.random(-200, 200)
         ball.dy = math.random(-50, -60)
     end
+
+    self.isPowerUpKeyAcquired = false
 end
 
 function PlayState:update(dt)
@@ -96,6 +98,15 @@ function PlayState:update(dt)
         for bk, ball in pairs(self.balls) do
             -- only check collision if we're in play
             if brick.inPlay and ball:collides(brick) then
+                if brick:isPowerUpKey() then
+                    if not self.isPowerUpKeyAcquired then
+                        -- treat like hitting a wall
+                        gSounds['wall-hit']:play()
+                        -- do nothing
+                        -- the key power up must be acquired first
+                        goto continue
+                    end
+                end
     
                 -- add to score
                 self.score = self.score + (brick.tier * 200 + brick.color * 25)
@@ -141,6 +152,8 @@ function PlayState:update(dt)
                         recoverPoints = self.recoverPoints
                     })
                 end
+
+                ::continue::
     
                 --
                 -- collision code for bricks
@@ -197,12 +210,16 @@ function PlayState:update(dt)
     for k, powerUp in pairs(self.powerUps) do
         if not powerUp.toRemove and powerUp:collides(self.paddle) then
             powerUp.toRemove = true
-            local newBall = Ball(math.random(7))
-            newBall.x = powerUp.x
-            newBall.y = powerUp.y
-            newBall.dx = math.random(-200, 200)
-            newBall.dy = math.random(-50, -60)
-            table.insert(self.balls, newBall)
+            if powerUp.type == 'extra-ball' then
+                local newBall = Ball(math.random(7))
+                newBall.x = powerUp.x
+                newBall.y = powerUp.y
+                newBall.dx = math.random(-200, 200)
+                newBall.dy = math.random(-50, -60)
+                table.insert(self.balls, newBall)
+            elseif powerUp.type == 'key' then
+                self.isPowerUpKeyAcquired = true
+            end
         end
     end
 
@@ -317,6 +334,8 @@ function PlayState:resetBalls()
     -- reset number of balls
     local balls = {}
     balls[0] = Ball()
+    balls[0].x = self.paddle.x + (self.paddle.width / 2) - 4
+    balls[0].y = self.paddle.y - 8
     self.balls = balls
 end
 

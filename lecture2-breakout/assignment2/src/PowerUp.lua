@@ -20,6 +20,8 @@ function PowerUp:render()
     local quad = {}
     if self.type == 'extra-ball' then
         quad = gFrames['power-ups'][8]
+    elseif self.type == 'key' then
+        quad = gFrames['power-ups'][9]
     end
     love.graphics.draw(gTextures['main'], quad, self.x, self.y)
 end
