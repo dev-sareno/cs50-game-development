@@ -67,7 +67,7 @@ function love.load()
         ['balls'] = GenerateQuadsBalls(gTextures['main']),
         ['bricks'] = GenerateQuadsBricks(gTextures['main']),
         ['hearts'] = GenerateQuads(gTextures['hearts'], 10, 9),
-        ['pwr-xtra-ball'] = GeneratePowerExtraBallQuads(gTextures['main'])
+        ['power-ups'] = GeneratePowerUpsQuads(gTextures['main'])
     }
     
     -- initialize our virtual resolution, which will be rendered within our
@@ -124,8 +124,8 @@ function love.load()
     })
 
     -- play our music outside of all states and set it to looping
-    gSounds['music']:play()
-    gSounds['music']:setLooping(true)
+    -- gSounds['music']:play()
+    -- gSounds['music']:setLooping(true)
 
     -- a table we'll use to keep track of which keys have been pressed this
     -- frame, to get around the fact that LÖVE's default callback won't let us

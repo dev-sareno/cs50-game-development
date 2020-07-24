@@ -126,6 +126,13 @@ function GenerateQuadsBalls(atlas)
     return quads
 end
 
-function GeneratePowerExtraBallQuads(atlas)
-    return love.graphics.newQuad(32, 192, 16, 16, atlas:getDimensions())
+function GeneratePowerUpsQuads(atlas)
+    local x = 0
+    local y = 192
+    local quads = {}
+    for i = 0, 9 do
+        quads[i] = love.graphics.newQuad(x, y, 16, 16, atlas:getDimensions())
+        x = x + 16
+    end
+    return quads
 end
