@@ -75,3 +75,21 @@ function Paddle:render()
     love.graphics.draw(gTextures['main'], gFrames['paddles'][self.size + 4 * (self.skin - 1)],
         self.x, self.y)
 end
+
+function Paddle:increaseSize()
+    self.size = math.min(4, self.size + 1)
+    -- also update the width of the paddle to have accuracy on collision
+    self.width = self.size * 32
+end
+
+function Paddle:shrinkSize()
+    self.size = math.max(1, self.size - 1)
+    -- also update the width of the paddle to have accuracy on collision
+    self.width = self.size * 32
+end
+
+function Paddle:resetSize()
+    self.size = 2
+    -- also update the width of the paddle to have accuracy on collision
+    self.width = self.size * 32
+end

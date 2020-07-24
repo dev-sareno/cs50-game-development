@@ -116,6 +116,9 @@ function PlayState:update(dt)
     
                     -- multiply recover points by 2
                     self.recoverPoints = math.min(100000, self.recoverPoints * 2)
+
+                    -- increase the size of the paddle
+                    self.paddle:increaseSize()
     
                     -- play recover sound effect
                     gSounds['recover']:play()
@@ -124,6 +127,9 @@ function PlayState:update(dt)
                 -- go to our victory screen if there are no more bricks left
                 if self:checkVictory() then
                     gSounds['victory']:play()
+
+                    self:resetBalls()
+                    self:resetPowerUps()
     
                     gStateMachine:change('victory', {
                         level = self.level,
@@ -223,9 +229,16 @@ function PlayState:update(dt)
     end
 
     if ballCount == 0 then
-        self.health = self.health - 1
+        -- shrink paddle size
+        self.paddle:shrinkSize()
+
+        self:resetBalls()
+        self:resetPowerUps()
+        self.paddle:resetSize()
+        
         gSounds['hurt']:play()
 
+        self.health = self.health - 1
         if self.health == 0 then
             gStateMachine:change('game-over', {
                 score = self.score,
@@ -298,4 +311,15 @@ function PlayState:checkVictory()
     end
 
     return true
+end
+
+function PlayState:resetBalls()
+    -- reset number of balls
+    local balls = {}
+    balls[0] = Ball()
+    self.balls = balls
+end
+
+function PlayState:resetPowerUps()
+    self.powerUps = {}
 end
