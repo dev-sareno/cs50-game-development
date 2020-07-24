@@ -95,7 +95,7 @@ function LevelMaker.createMap(level)
             local powerUps = {}
 
             -- random 0-3, a 25% chance for the occuring brick to have a power up
-            local shouldHaveExtraBallPowerUp = true--math.random(0, 3) == 0
+            local shouldHaveExtraBallPowerUp = math.random(0, 3) == 0
             if shouldHaveExtraBallPowerUp then
                 local randomXPosition = xCoordinate + math.random(4, 12)
                 local extraBallPowerUp = PowerUp('extra-ball', randomXPosition, yCoordinate)
@@ -141,7 +141,7 @@ function LevelMaker.createMap(level)
     end 
 
     -- random 0-9, a 10% chance for this occuring brick to be a key power up
-    local shouldBeAPowerUpBrick = true--math.random(0, 9) == 0
+    local shouldBeAPowerUpBrick = math.random(0, 9) == 0
     if shouldBeAPowerUpBrick then
         local brickToReplaceIndex = math.random(1, #bricks) - 1         -- -1 to convert it to index
         local brickToReplace = bricks[brickToReplaceIndex]
@@ -151,13 +151,6 @@ function LevelMaker.createMap(level)
         powerUps[0] = PowerUp('key', brickToReplace.x + ((32 - 16) / 2), brickToReplace.y)
         brickToReplace.powerUps = powerUps
     end
-
-    -- for k, brick in pairs(bricks) do
-    --     -- create a key power up
-    --     local powerUps = {}
-    --     powerUps[0] = PowerUp('key', brick.x + ((32 - 16) / 2), brick.y)
-    --     brick.powerUps = powerUps
-    -- end
 
     -- in the event we didn't generate any bricks, try again
     if #bricks == 0 then
