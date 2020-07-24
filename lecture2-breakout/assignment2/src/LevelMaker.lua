@@ -84,15 +84,27 @@ function LevelMaker.createMap(level)
                 skipFlag = not skipFlag
             end
 
+            -- x-coordinate
+            local xCoordinate = (x-1)                   -- decrement x by 1 because tables are 1-indexed, coords are 0
+                        * 32                            -- multiply by 32, the brick width
+                        + 8                             -- the screen should have 8 pixels of padding; we can fit 13 cols + 16 pixels total
+                        + (13 - numCols) * 16           -- left-side padding for when there are fewer than 13 columns
+            local yCoordinate = y * 16                  -- just use y * 16, since we need top padding anyway
+
+            -- power ups
+            local powerUps = {}
+
+            -- random 0-3, a 25% chance for the occuring brick to have a power up
+            local shouldHaveExtraBallPowerUp = math.random(0, 3) == 0
+            if shouldHaveExtraBallPowerUp then
+                local extraBallPowerUp = PowerUp('extra-ball', xCoordinate, yCoordinate)
+                table.insert(powerUps, extraBallPowerUp)
+            end
+
             b = Brick(
-                -- x-coordinate
-                (x-1)                   -- decrement x by 1 because tables are 1-indexed, coords are 0
-                * 32                    -- multiply by 32, the brick width
-                + 8                     -- the screen should have 8 pixels of padding; we can fit 13 cols + 16 pixels total
-                + (13 - numCols) * 16,  -- left-side padding for when there are fewer than 13 columns
-                
-                -- y-coordinate
-                y * 16                  -- just use y * 16, since we need top padding anyway
+                xCoordinate + ((32 - 16) / 2),          -- 32=brick's width, 16=ball's width. Align to center of the brick
+                yCoordinate,
+                powerUps                                -- powerups
             )
 
             -- if we're alternating, figure out which color/tier we're on

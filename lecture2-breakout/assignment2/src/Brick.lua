@@ -50,7 +50,7 @@ paletteColors = {
     }
 }
 
-function Brick:init(x, y)
+function Brick:init(x, y, powerUps)
     -- used for coloring and score calculation
     self.tier = 0
     self.color = 1
@@ -78,6 +78,8 @@ function Brick:init(x, y)
 
     -- spread of particles; normal looks more natural than uniform
     self.psystem:setAreaSpread('normal', 10, 10)
+
+    self.powerUps = powerUps
 end
 
 --[[

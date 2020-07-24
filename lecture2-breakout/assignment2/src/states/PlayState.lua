@@ -99,6 +99,12 @@ function PlayState:update(dt)
     
                 -- add to score
                 self.score = self.score + (brick.tier * 200 + brick.color * 25)
+
+                -- spawn powerups
+                for k, powerUp in pairs(brick.powerUps) do
+                    table.insert(self.powerUps, powerUp)
+                end
+                brick.powerUps = {}  -- empty to prevent spawning another power up the next time it's being hit
     
                 -- trigger the brick's hit function, which removes it from play
                 brick:hit()
